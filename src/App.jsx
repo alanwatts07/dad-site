@@ -1,8 +1,16 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Link, useLocation } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Summit360 from './pages/Summit360';
+import Products from './pages/Products';
+import LearningCenter from './pages/LearningCenter';
+import Contact from './pages/Contact';
 import './App.css';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -12,47 +20,35 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location]);
+
   return (
     <div className="app">
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="container nav-content">
-          <div className="logo">NewEnergy<span className="highlight">Initiative</span></div>
+          <Link to="/" className="logo">NewEnergy<span className="highlight">Initiative</span></Link>
           <ul className="nav-links">
-            <li><a href="#home">Home</a></li>
-            <li><a href="#mission">Mission</a></li>
-            <li><a href="#technology">Technology</a></li>
-            <li><a href="#contact" className="btn-nav">Get Involved</a></li>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About Us</Link></li>
+            <li><Link to="/summit-360">Summit 360</Link></li>
+            <li><Link to="/products">Marketplace</Link></li>
+            <li><Link to="/learning">Learning</Link></li>
+            <li><Link to="/contact" className="btn-nav">Contact</Link></li>
           </ul>
         </div>
       </nav>
 
-      <header id="home" className="hero">
-        <div className="hero-overlay"></div>
-        <div className="hero-content container">
-          <h1 className="fade-in">Powering the <span className="text-gradient">Future</span></h1>
-          <p className="fade-in delay-1">Sustainable. Efficient. Limitless.</p>
-          <div className="hero-buttons fade-in delay-2">
-            <a href="#mission" className="btn btn-primary">Our Vision</a>
-            <a href="#contact" className="btn btn-outline">Contact Us</a>
-          </div>
-        </div>
-      </header>
-
-      <section id="mission" className="section mission">
-        <div className="container">
-          <h2 className="section-title">The Initiative</h2>
-          <div className="grid-2">
-            <div className="card">
-              <h3>Clean Generation</h3>
-              <p>Harnessing the power of the sun and advanced renewables to create a zero-carbon future.</p>
-            </div>
-            <div className="card">
-              <h3>Smart Distribution</h3>
-              <p>Modernizing the grid with AI-driven efficiency and resilient infrastructure.</p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/summit-360" element={<Summit360 />} />
+        <Route path="/products" element={<Products />} />
+        <Route path="/learning" element={<LearningCenter />} />
+        <Route path="/contact" element={<Contact />} />
+      </Routes>
 
       <footer className="footer">
         <div className="container">
