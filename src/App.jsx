@@ -7,6 +7,7 @@ import Products from './pages/Products';
 import LearningCenter from './pages/LearningCenter';
 import Contact from './pages/Contact';
 import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import './App.css';
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
         <Route path="/products" element={<Products />} />
         <Route path="/learning" element={<LearningCenter />} />
         <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
 

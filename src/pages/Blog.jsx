@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBlogPosts } from '../sanity';
+import { getBlogPosts, urlFor } from '../sanity';
 
 const Blog = () => {
     const [posts, setPosts] = useState([]);
@@ -44,15 +44,25 @@ const Blog = () => {
                         <div className="blog-grid fade-in delay-2">
                             {posts.map(post => (
                                 <article key={post._id} className="blog-card">
-                                    <div className="blog-meta">
-                                        <span className="blog-category">{post.categories?.[0] || 'General'}</span>
-                                        <span className="blog-date">
-                                            {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}
-                                        </span>
+                                    {post.mainImage && (
+                                        <div className="blog-card-image">
+                                            <img
+                                                src={urlFor(post.mainImage).width(600).height(400).fit('crop').crop('center').url()}
+                                                alt={post.title}
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="blog-card-content">
+                                        <div className="blog-meta">
+                                            <span className="blog-category">{post.categories?.[0] || 'General'}</span>
+                                            <span className="blog-date">
+                                                {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : 'Draft'}
+                                            </span>
+                                        </div>
+                                        <h3>{post.title}</h3>
+                                        <p>{post.excerpt || 'Click to read more...'}</p>
+                                        <a href={`/blog/${post.slug?.current}`} className="read-more">Read Article →</a>
                                     </div>
-                                    <h3>{post.title}</h3>
-                                    <p>{post.excerpt}</p>
-                                    <a href={`/blog/${post.slug?.current}`} className="read-more">Read Article →</a>
                                 </article>
                             ))}
                         </div>

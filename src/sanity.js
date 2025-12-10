@@ -1,4 +1,5 @@
 import { createClient } from '@sanity/client'
+import imageUrlBuilder from '@sanity/image-url'
 
 export const client = createClient({
   projectId: 'y1pdy8w6',
@@ -6,6 +7,12 @@ export const client = createClient({
   useCdn: true, // Use CDN for faster reads
   apiVersion: '2024-01-01',
 })
+
+// Helper to generate image URLs
+const builder = imageUrlBuilder(client)
+export function urlFor(source) {
+  return builder.image(source)
+}
 
 // Helper function to fetch blog posts
 export async function getBlogPosts() {
@@ -15,9 +22,10 @@ export async function getBlogPosts() {
     slug,
     publishedAt,
     excerpt,
-    "author": author->name,
+    author,
     mainImage,
-    body
+    body,
+    categories
   }`)
 }
 
@@ -33,6 +41,8 @@ export async function getAffiliateLinks() {
     name,
     url,
     description,
-    category
+    category,
+    icon,
+    image
   }`)
 }
