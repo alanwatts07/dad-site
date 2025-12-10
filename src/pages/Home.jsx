@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
     return (
@@ -10,7 +11,7 @@ const Home = () => {
                     <p className="fade-in delay-1">Sustainable. Efficient. Limitless.</p>
                     <div className="hero-buttons fade-in delay-2">
                         <a href="#mission" className="btn btn-primary">Our Vision</a>
-                        <a href="/about" className="btn btn-outline">About Us</a>
+                        <Link to="/about" className="btn btn-outline">About Us</Link>
                     </div>
                 </div>
             </header>
