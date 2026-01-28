@@ -555,6 +555,18 @@
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+.form-loading,
+.form-placeholder {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.form-placeholder .text-muted {
+  margin-top: 10px;
+  font-size: 0.9rem;
+}
+
 /* Blog Page Styles */
 .blog-grid {
   display: grid;

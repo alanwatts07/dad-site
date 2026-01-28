@@ -1,11 +1,27 @@
-import React from 'react';
+import { useState, useEffect } from 'react';
+import GHLForm from '../components/GHLForm';
+import { getGHLFormByName } from '../sanity';
 
 const Contact = () => {
+    const [formId, setFormId] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        getGHLFormByName('Main Contact Form')
+            .then(form => {
+                if (form?.formId) {
+                    setFormId(form.formId);
+                }
+            })
+            .catch(err => console.error('Error loading form:', err))
+            .finally(() => setLoading(false));
+    }, []);
+
     return (
         <div className="page-content">
             <section className="section contact-hero">
                 <div className="container">
-                    <h1 className="section-title fade-in">We’re Here to <span className="text-gradient">Help</span></h1>
+                    <h1 className="section-title fade-in">We're Here to <span className="text-gradient">Help</span></h1>
                     <p className="lead fade-in delay-1 text-center">Have questions? Need guidance? Want to learn more?</p>
 
                     <div className="contact-container fade-in delay-2">
@@ -26,25 +42,18 @@ const Contact = () => {
 
                         <div className="contact-form-wrapper">
                             <h3>Request Information</h3>
-                            <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
-                                <div className="form-group">
-                                    <label>Name</label>
-                                    <input type="text" placeholder="Your Name" />
+                            {loading ? (
+                                <div className="form-loading">
+                                    <p>Loading form...</p>
                                 </div>
-                                <div className="form-group">
-                                    <label>Email</label>
-                                    <input type="email" placeholder="Your Email" />
+                            ) : formId ? (
+                                <GHLForm formId={formId} className="ghl-form-dark" />
+                            ) : (
+                                <div className="form-placeholder">
+                                    <p>Contact form coming soon.</p>
+                                    <p className="text-muted">Email us directly at info@newenergyinitiative.com</p>
                                 </div>
-                                <div className="form-group">
-                                    <label>I'm interested in...</label>
-                                    <select>
-                                        <option>Free Home Energy Assessment</option>
-                                        <option>Solar Comparison Report</option>
-                                        <option>General Information</option>
-                                    </select>
-                                </div>
-                                <button type="submit" className="btn btn-primary">Send Request</button>
-                            </form>
+                            )}
                         </div>
                     </div>
                 </div>
