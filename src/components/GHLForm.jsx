@@ -2,38 +2,23 @@ import { useEffect, useRef } from 'react';
 
 /**
  * GHLForm - Embeds a GoHighLevel form into your React app
- *
- * Usage:
- *   <GHLForm formId="abc123xyz" />
- *
- * The formId comes from your Sanity CMS (ghlForm schema) or directly from GHL.
- *
- * How it works:
- * 1. Creates a container div with the data-layout attribute GHL expects
- * 2. Dynamically loads the GHL form script
- * 3. Cleans up the script when component unmounts (important for SPA navigation)
+ * Uses the script-based embed method for better styling control
  */
 const GHLForm = ({ formId, className = '' }) => {
     const containerRef = useRef(null);
+    const scriptLoaded = useRef(false);
 
     useEffect(() => {
-        if (!formId) return;
+        if (!formId || scriptLoaded.current) return;
 
-        // Create the script element
+        // Load the GHL form embed script
         const script = document.createElement('script');
         script.src = 'https://link.msgsndr.com/js/form_embed.js';
         script.async = true;
-
-        // Append script to load the form
         document.body.appendChild(script);
+        scriptLoaded.current = true;
 
-        // Cleanup on unmount (important for React SPA navigation)
         return () => {
-            // Remove the script
-            if (script.parentNode) {
-                script.parentNode.removeChild(script);
-            }
-            // Clear the container to prevent duplicate forms
             if (containerRef.current) {
                 containerRef.current.innerHTML = '';
             }
@@ -51,23 +36,15 @@ const GHLForm = ({ formId, className = '' }) => {
                 src={`https://link.msgsndr.com/widget/form/${formId}`}
                 style={{
                     width: '100%',
-                    height: '500px',
+                    height: '450px',
                     border: 'none',
                     borderRadius: '8px',
+                    background: 'transparent',
+                    colorScheme: 'dark',
                 }}
                 id={`inline-${formId}`}
-                data-layout="{'id':'INLINE'}"
-                data-trigger-type="alwaysShow"
-                data-trigger-value=""
-                data-activation-type="alwaysActivated"
-                data-activation-value=""
-                data-deactivation-type="neverDeactivate"
-                data-deactivation-value=""
-                data-form-name="Embedded Form"
-                data-height="500"
-                data-layout-iframe-id={`inline-${formId}`}
-                data-form-id={formId}
-                title="GHL Form"
+                title="Contact Form"
+                scrolling="no"
             />
         </div>
     );

@@ -542,10 +542,12 @@
   min-height: 400px;
   border-radius: 12px;
   overflow: hidden;
+  background: var(--surface-color);
 }
 
 .ghl-form-container iframe {
   background: transparent;
+  filter: none;
 }
 
 /* Use this class to match dark theme */
@@ -553,6 +555,7 @@
   background: var(--surface-color);
   padding: 20px;
   border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
 }
 
 .form-loading,
