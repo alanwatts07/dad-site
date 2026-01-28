@@ -536,6 +536,25 @@
   border-color: var(--primary);
 }
 
+/* GHL Form Embed Styles */
+.ghl-form-container {
+  width: 100%;
+  min-height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.ghl-form-container iframe {
+  background: transparent;
+}
+
+/* Use this class to match dark theme */
+.ghl-form-dark {
+  background: var(--surface-color);
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 /* Blog Page Styles */
 .blog-grid {
   display: grid;

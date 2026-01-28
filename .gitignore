@@ -24,3 +24,8 @@ dist-ssr
 *.sln
 *.sw?
 .vercel
+
+# Private notes (not for repo)
+GHL_MEETING_NOTES.md
+*_NOTES.md
+/notes/

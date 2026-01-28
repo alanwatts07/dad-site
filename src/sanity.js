@@ -34,7 +34,7 @@ export async function getPageContent(pageId) {
   return await client.fetch(`*[_type == "page" && slug.current == $pageId][0]`, { pageId })
 }
 
-// Helper function to fetch all affiliate links
+// Helper function to fetch all affiliate links (with optional GHL form)
 export async function getAffiliateLinks() {
   return await client.fetch(`*[_type == "affiliateLink"] {
     _id,
@@ -43,6 +43,34 @@ export async function getAffiliateLinks() {
     description,
     category,
     icon,
-    image
+    image,
+    "ghlForm": ghlForm->{
+      formId,
+      formType,
+      isActive
+    }
   }`)
+}
+
+// Helper function to fetch all active GHL forms
+export async function getGHLForms() {
+  return await client.fetch(`*[_type == "ghlForm" && isActive == true] {
+    _id,
+    name,
+    formId,
+    formType,
+    pipeline,
+    description
+  }`)
+}
+
+// Helper function to fetch a specific GHL form by name
+export async function getGHLFormByName(formName) {
+  return await client.fetch(
+    `*[_type == "ghlForm" && name == $formName && isActive == true][0] {
+      formId,
+      formType
+    }`,
+    { formName }
+  )
 }

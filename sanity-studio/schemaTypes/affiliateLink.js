@@ -46,5 +46,12 @@ export default {
             title: 'Product Image',
             type: 'image',
         },
+        {
+            name: 'ghlForm',
+            title: 'Lead Capture Form',
+            type: 'reference',
+            to: [{ type: 'ghlForm' }],
+            description: 'Optional: Attach a GHL form to this product for lead capture',
+        },
     ],
 }
