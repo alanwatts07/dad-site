@@ -39,6 +39,7 @@ export async function getAffiliateLinks() {
   return await client.fetch(`*[_type == "affiliateLink"] {
     _id,
     name,
+    slug,
     url,
     description,
     category,

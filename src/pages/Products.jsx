@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { getAffiliateLinks, urlFor } from '../sanity';
+import Modal from '../components/Modal';
+import ContactForm from '../components/ContactForm';
 
 const Products = () => {
   const [links, setLinks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
   useEffect(() => {
     getAffiliateLinks()
@@ -87,12 +90,19 @@ const Products = () => {
                 )}
                 <h3>{product.name}</h3>
                 <p>{product.description}</p>
-                {product.url && (
-                  <a href={product.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                    {product.icon && <span className="btn-icon">{product.icon}</span>}
-                    View Product →
-                  </a>
-                )}
+                <div className="product-card-buttons">
+                  {product.url && (
+                    <a href={product.url} target="_blank" rel="noopener noreferrer" className="btn btn-primary">
+                      View Product
+                    </a>
+                  )}
+                  <button
+                    className="btn btn-secondary"
+                    onClick={() => setSelectedProduct(product)}
+                  >
+                    I'm Interested
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -102,6 +112,25 @@ const Products = () => {
           </div>
         </div>
       </section>
+
+      <Modal
+        isOpen={!!selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        title={selectedProduct ? `Interested in ${selectedProduct.name}?` : ''}
+      >
+        {selectedProduct && (
+          <ContactForm
+            source={`Product Interest - ${selectedProduct.name}`}
+            tags={[
+              'product-interest',
+              `interest-${selectedProduct.slug?.current || selectedProduct.name.toLowerCase().replace(/\s+/g, '-')}`
+            ]}
+            onSuccess={() => {
+              setTimeout(() => setSelectedProduct(null), 3000);
+            }}
+          />
+        )}
+      </Modal>
     </div>
   );
 };

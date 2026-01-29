@@ -10,6 +10,17 @@ export default {
             validation: (Rule) => Rule.required(),
         },
         {
+            name: 'slug',
+            title: 'Slug',
+            type: 'slug',
+            description: 'Used for tagging leads (e.g., "solar-panels" → tagged as "interest-solar-panels")',
+            options: {
+                source: 'name',
+                maxLength: 50,
+            },
+            validation: (Rule) => Rule.required(),
+        },
+        {
             name: 'url',
             title: 'Affiliate URL',
             type: 'url',
