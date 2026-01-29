@@ -1,22 +1,6 @@
-import { useState, useEffect } from 'react';
-import GHLForm from '../components/GHLForm';
-import { getGHLFormByName } from '../sanity';
+import ContactForm from '../components/ContactForm';
 
 const Contact = () => {
-    const [formId, setFormId] = useState(null);
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        getGHLFormByName('Main Contact Form')
-            .then(form => {
-                if (form?.formId) {
-                    setFormId(form.formId);
-                }
-            })
-            .catch(err => console.error('Error loading form:', err))
-            .finally(() => setLoading(false));
-    }, []);
-
     return (
         <div className="page-content">
             <section className="section contact-hero">
@@ -42,18 +26,10 @@ const Contact = () => {
 
                         <div className="contact-form-wrapper">
                             <h3>Request Information</h3>
-                            {loading ? (
-                                <div className="form-loading">
-                                    <p>Loading form...</p>
-                                </div>
-                            ) : formId ? (
-                                <GHLForm formId={formId} className="ghl-form-dark" />
-                            ) : (
-                                <div className="form-placeholder">
-                                    <p>Contact form coming soon.</p>
-                                    <p className="text-muted">Email us directly at info@newenergyinitiative.com</p>
-                                </div>
-                            )}
+                            <ContactForm
+                                source="Website Contact Page"
+                                tags={['contact-page']}
+                            />
                         </div>
                     </div>
                 </div>
