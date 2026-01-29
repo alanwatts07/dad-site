@@ -66,11 +66,9 @@ export async function getGHLForms() {
 
 // Helper function to fetch a specific GHL form by name
 export async function getGHLFormByName(formName) {
-  return await client.fetch(
-    `*[_type == "ghlForm" && name == $formName][0] {
-      formId,
-      formType
-    }`,
-    { formName }
-  )
+  const query = `*[_type == "ghlForm" && name == "${formName}"][0] {
+    formId,
+    formType
+  }`
+  return await client.fetch(query)
 }
