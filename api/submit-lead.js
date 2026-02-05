@@ -16,17 +16,32 @@ async function ghlFetch(endpoint, options, token) {
     return { response, data };
 }
 
-// Search for existing contact by email
-async function findContactByEmail(email, locationId, token) {
-    const { response, data } = await ghlFetch(
+// Search for existing contact by email or phone
+async function findExistingContact(email, phone, locationId, token) {
+    // Check by email first
+    const emailCheck = await ghlFetch(
         `/contacts/search/duplicate?locationId=${locationId}&email=${encodeURIComponent(email)}`,
         { method: 'GET' },
         token
     );
 
-    if (response.ok && data.contact) {
-        return data.contact;
+    if (emailCheck.response.ok && emailCheck.data.contact) {
+        return emailCheck.data.contact;
     }
+
+    // Check by phone if provided
+    if (phone) {
+        const phoneCheck = await ghlFetch(
+            `/contacts/search/duplicate?locationId=${locationId}&phone=${encodeURIComponent(phone)}`,
+            { method: 'GET' },
+            token
+        );
+
+        if (phoneCheck.response.ok && phoneCheck.data.contact) {
+            return phoneCheck.data.contact;
+        }
+    }
+
     return null;
 }
 
@@ -44,6 +59,16 @@ async function addTagsToContact(contactId, tags, token) {
 }
 
 export default async function handler(req, res) {
+    // CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    // Handle preflight
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     // Only allow POST
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -73,32 +98,24 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Server configuration error' });
     }
 
-    const allTags = ['website-lead', ...tags];
+    // Add timestamp tag to trigger workflow every time
+    const timestamp = Date.now();
+    const allTags = ['website-lead', `dad-submit-${timestamp}`, ...tags];
 
     try {
-        // First, check if contact already exists
-        const existingContact = await findContactByEmail(email, GHL_LOCATION_ID, GHL_API_TOKEN);
+        // First, check if contact already exists (by email or phone)
+        const existingContact = await findExistingContact(email, phone, GHL_LOCATION_ID, GHL_API_TOKEN);
 
         if (existingContact) {
             // Contact exists - add new tags to their profile
             const tagResult = await addTagsToContact(existingContact.id, allTags, GHL_API_TOKEN);
 
-            if (tagResult.success) {
-                return res.status(200).json({
-                    success: true,
-                    message: 'Thanks for your interest! We\'ll be in touch soon.',
-                    contactId: existingContact.id,
-                    tagsAdded: true
-                });
-            } else {
-                console.error('Failed to add tags:', tagResult.data);
-                // Still return success to user - contact exists
-                return res.status(200).json({
-                    success: true,
-                    message: 'Thanks! We\'ll be in touch soon.',
-                    contactId: existingContact.id
-                });
-            }
+            return res.status(200).json({
+                success: true,
+                message: 'Thanks for your interest! We\'ll be in touch soon.',
+                contactId: existingContact.id,
+                tagsAdded: tagResult.success
+            });
         }
 
         // Contact doesn't exist - create new one
@@ -128,6 +145,20 @@ export default async function handler(req, res) {
         );
 
         if (!response.ok) {
+            // Handle duplicate contact error - GHL found a match we missed
+            if (data.statusCode === 400 && data.meta?.contactId) {
+                console.log('Duplicate found via GHL error, updating existing contact:', data.meta.contactId);
+
+                const tagResult = await addTagsToContact(data.meta.contactId, allTags, GHL_API_TOKEN);
+
+                return res.status(200).json({
+                    success: true,
+                    message: 'Thanks for your interest! We\'ll be in touch soon.',
+                    contactId: data.meta.contactId,
+                    tagsAdded: tagResult.success
+                });
+            }
+
             console.error('GHL API Error:', data);
             return res.status(response.status).json({
                 error: 'Failed to submit lead',
