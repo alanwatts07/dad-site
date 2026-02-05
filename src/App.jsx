@@ -12,6 +12,7 @@ import './App.css';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -22,9 +23,10 @@ function App() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Scroll to top on route change
+  // Scroll to top and close menu on route change
   useEffect(() => {
     window.scrollTo(0, 0);
+    setMenuOpen(false);
   }, [location]);
 
   return (
@@ -32,7 +34,16 @@ function App() {
       <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="container nav-content">
           <Link to="/" className="logo">NewEnergy<span className="highlight">Initiative</span></Link>
-          <ul className="nav-links">
+          <button
+            className={`hamburger ${menuOpen ? 'active' : ''}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Toggle navigation"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About Us</Link></li>
             <li><Link to="/summit-360">Summit 360</Link></li>
