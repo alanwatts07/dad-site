@@ -6,7 +6,6 @@ import Summit360 from './pages/Summit360';
 import Products from './pages/Products';
 import LearningCenter from './pages/LearningCenter';
 import Contact from './pages/Contact';
-import Book from './pages/Book';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import './App.css';
@@ -51,7 +50,6 @@ function App() {
             <li><Link to="/products">Marketplace</Link></li>
             <li><Link to="/learning">Learning</Link></li>
             <li><Link to="/blog">Blog</Link></li>
-            <li><Link to="/book" className="btn-nav btn-nav-book">Book</Link></li>
             <li><Link to="/contact" className="btn-nav">Contact</Link></li>
           </ul>
         </div>
@@ -65,7 +63,6 @@ function App() {
         <Route path="/learning" element={<LearningCenter />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
-        <Route path="/book" element={<Book />} />
         <Route path="/contact" element={<Contact />} />
       </Routes>
 
