@@ -1046,3 +1046,80 @@
 .btn-secondary:hover {
   background: rgba(0, 240, 255, 0.1);
 }
+
+/* Book Nav Button */
+.btn-nav-book {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.btn-nav-book:hover {
+  border-color: var(--secondary);
+  background: rgba(57, 255, 20, 0.1);
+}
+
+/* Booking Page */
+.booking-hero {
+  padding-bottom: 20px;
+}
+
+.booking-subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 30px;
+}
+
+.booking-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+}
+
+.booking-card {
+  background: var(--surface-color);
+  padding: 40px 30px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.booking-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--primary);
+}
+
+.booking-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #000;
+  font-size: 1.4rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+}
+
+.booking-card h3 {
+  color: #fff;
+  margin-bottom: 12px;
+  font-size: 1.3rem;
+}
+
+.booking-card p {
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.booking-cta-section {
+  padding-top: 40px;
+}
+
+.booking-cta-section h2 {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
