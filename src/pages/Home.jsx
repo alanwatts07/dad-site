@@ -10,7 +10,7 @@ const Home = () => {
                     <h1 className="fade-in">Powering the <span className="text-gradient">Future</span></h1>
                     <p className="fade-in delay-1">Sustainable. Efficient. Limitless.</p>
                     <div className="hero-buttons fade-in delay-2">
-                        <a href="#mission" className="btn btn-primary">Our Vision</a>
+                        <Link to="/book" className="btn btn-primary">Book Now</Link>
                         <Link to="/about" className="btn btn-outline">About Us</Link>
                     </div>
                 </div>
