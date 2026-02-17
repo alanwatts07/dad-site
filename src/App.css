@@ -1046,3 +1046,47 @@
 .btn-secondary:hover {
   background: rgba(0, 240, 255, 0.1);
 }
+
+/* Book Nav Button */
+.btn-nav-book {
+  border-color: var(--secondary);
+  color: var(--secondary);
+}
+
+.btn-nav-book:hover {
+  border-color: var(--secondary);
+  background: rgba(57, 255, 20, 0.1);
+}
+
+/* Booking Page */
+.booking-hero {
+  padding-bottom: 0;
+}
+
+.booking-subtitle {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.booking-section {
+  padding-top: 40px;
+}
+
+.booking-wrapper {
+  max-width: 900px;
+  margin: 0 auto;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: var(--surface-color);
+}
+
+.booking-iframe {
+  display: block;
+  width: 100%;
+  min-height: 700px;
+  border: none;
+  background: var(--surface-color);
+}
