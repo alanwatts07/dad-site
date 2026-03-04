@@ -71,7 +71,7 @@ function App() {
 
       <footer className="footer">
         <div className="container">
-          <p>&copy; 2025 New Energy Initiative. All rights reserved.</p>
+          <p>&copy; 2026 New Energy Initiative. All rights reserved.</p>
         </div>
       </footer>
     </div>
