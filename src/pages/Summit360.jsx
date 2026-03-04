@@ -1,8 +1,14 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const Summit360 = () => {
     return (
         <div className="page-content">
+            <SEO
+                title="Summit 360 Approach"
+                description="The Summit 360 Approach™ is your complete home energy roadmap — reduce usage first, then reduce the cost of the energy you still need."
+                canonical="/summit-360"
+            />
             <section className="section summit-hero">
                 <div className="container">
                     <h1 className="section-title fade-in">The Summit 360 <span className="text-gradient">Approach™</span></h1>

@@ -1,8 +1,14 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const About = () => {
     return (
         <div className="page-content">
+            <SEO
+                title="About Us"
+                description="Learn about New Energy Initiative — we educate, inform, and connect homeowners with the tools and resources to make smarter clean energy choices."
+                canonical="/about"
+            />
             <section className="section about-hero">
                 <div className="container">
                     <h1 className="section-title fade-in">Who We Are & <span className="text-gradient">Why We Care</span></h1>

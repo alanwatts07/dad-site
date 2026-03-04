@@ -1,9 +1,28 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
+
+const orgSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'New Energy Initiative',
+    url: 'https://www.newenergyinitiative.com',
+    description: 'Clean energy education and home energy solutions. We educate, inform, and connect homeowners with tools and resources to make smarter energy choices.',
+    contactPoint: {
+        '@type': 'ContactPoint',
+        email: 'info@newenergyinitiative.com',
+        contactType: 'customer service',
+    },
+};
 
 const Home = () => {
     return (
         <>
+            <SEO
+                description="New Energy Initiative educates and connects homeowners with clean energy solutions — solar, heat pumps, battery storage, smart thermostats, and more."
+                canonical="/"
+                schema={orgSchema}
+            />
             <header id="home" className="hero">
                 <div className="hero-overlay"></div>
                 <div className="hero-content container">

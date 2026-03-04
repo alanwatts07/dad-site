@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import SEO from '../components/SEO';
 import { getAffiliateLinks, urlFor } from '../sanity';
 import Modal from '../components/Modal';
 import ContactForm from '../components/ContactForm';
@@ -40,6 +41,20 @@ const Products = () => {
   // Get unique categories
   const categories = ['all', ...new Set(links.map(link => link.category).filter(Boolean))];
 
+  const productSchema = links.length > 0 ? {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'New Energy Initiative Marketplace',
+    description: 'Vetted clean energy products for homeowners — solar, heat pumps, battery storage, smart thermostats, and eco accessories.',
+    itemListElement: links.map((product, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: product.name,
+      description: product.description,
+      url: product.url || 'https://www.newenergyinitiative.com/products',
+    })),
+  } : null;
+
   if (loading) {
     return (
       <div className="page-content">
@@ -54,6 +69,12 @@ const Products = () => {
 
   return (
     <div className="page-content">
+      <SEO
+        title="Energy Marketplace"
+        description="Browse vetted clean energy products — solar systems, heat pumps, battery storage, smart thermostats, and eco accessories. Every product is quality-checked for performance."
+        canonical="/products"
+        schema={productSchema}
+      />
       <section className="section products-hero">
         <div className="container">
           <h1 className="section-title fade-in">Explore the Best in <span className="text-gradient">New Energy</span></h1>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { client, urlFor } from '../sanity';
+import SEO from '../components/SEO';
 
 const BlogPost = () => {
     const { slug } = useParams();
@@ -53,8 +54,36 @@ const BlogPost = () => {
         );
     }
 
+    const postImage = post.mainImage ? urlFor(post.mainImage).width(1200).url() : undefined;
+
+    const articleSchema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        headline: post.title,
+        description: post.excerpt || '',
+        image: postImage,
+        datePublished: post.publishedAt,
+        author: {
+            '@type': 'Person',
+            name: post.author || 'New Energy Initiative',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'New Energy Initiative',
+            url: 'https://www.newenergyinitiative.com',
+        },
+    };
+
     return (
         <div className="page-content">
+            <SEO
+                title={post.title}
+                description={post.excerpt || `Read ${post.title} on the New Energy Initiative Journal.`}
+                canonical={`/blog/${post.slug?.current}`}
+                image={postImage}
+                type="article"
+                schema={articleSchema}
+            />
             <article className="section blog-post">
                 <div className="container">
                     <div className="post-header">

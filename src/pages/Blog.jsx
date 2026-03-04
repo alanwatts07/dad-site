@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { getBlogPosts, urlFor } from '../sanity';
+import SEO from '../components/SEO';
 
 const Blog = () => {
     const [posts, setPosts] = useState([]);
@@ -31,6 +32,11 @@ const Blog = () => {
 
     return (
         <div className="page-content">
+            <SEO
+                title="Energy Journal"
+                description="Stay informed on clean energy news, home efficiency tips, solar updates, and renewable energy resources from the New Energy Initiative team."
+                canonical="/blog"
+            />
             <section className="section blog-hero">
                 <div className="container">
                     <h1 className="section-title fade-in">The New Energy <span className="text-gradient">Journal</span></h1>

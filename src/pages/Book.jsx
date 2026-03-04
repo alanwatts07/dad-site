@@ -1,8 +1,15 @@
+import SEO from '../components/SEO';
+
 const BOOKING_URL = 'https://api.leadconnectorhq.com/widget/bookings/solar-booking-1';
 
 const Book = () => {
     return (
         <div className="page-content">
+            <SEO
+                title="Book a Consultation"
+                description="Schedule a one-on-one energy consultation with New Energy Initiative experts. No pressure, no obligation — just a conversation about your energy future."
+                canonical="/book"
+            />
             <section className="section booking-hero">
                 <div className="container text-center">
                     <h1 className="section-title fade-in">Book a <span className="text-gradient">Consultation</span></h1>

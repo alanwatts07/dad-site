@@ -1,8 +1,14 @@
 import React from 'react';
+import SEO from '../components/SEO';
 
 const LearningCenter = () => {
     return (
         <div className="page-content">
+            <SEO
+                title="Energy Learning Center"
+                description="Free home energy education for homeowners — animated videos, interactive guides, checklists, and incentive resources to help you save money and energy."
+                canonical="/learning"
+            />
             <section className="section learning-hero">
                 <div className="container">
                     <h1 className="section-title fade-in">Energy <span className="text-gradient">Learning Center</span></h1>

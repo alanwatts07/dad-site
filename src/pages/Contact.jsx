@@ -1,8 +1,14 @@
 import ContactForm from '../components/ContactForm';
+import SEO from '../components/SEO';
 
 const Contact = () => {
     return (
         <div className="page-content">
+            <SEO
+                title="Contact Us"
+                description="Get in touch with New Energy Initiative. Our energy educators are ready to help you explore clean energy options for your home."
+                canonical="/contact"
+            />
             <section className="section contact-hero">
                 <div className="container">
                     <h1 className="section-title fade-in">We're Here to <span className="text-gradient">Help</span></h1>
