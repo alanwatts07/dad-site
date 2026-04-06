@@ -5,7 +5,7 @@ export const client = createClient({
   projectId: 'y1pdy8w6',
   dataset: 'production',
   useCdn: true, // Use CDN for faster reads
-  apiVersion: '2024-01-01',
+  apiVersion: '2025-01-01',
 })
 
 // Helper to generate image URLs

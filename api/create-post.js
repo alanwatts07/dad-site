@@ -421,7 +421,7 @@ export default async function handler(req, res) {
     const sanityClient = createClient({
         projectId: 'y1pdy8w6',
         dataset: 'production',
-        apiVersion: '2024-01-01',
+        apiVersion: '2025-01-01',
         token: SANITY_WRITE_TOKEN,
         useCdn: false,
     })
