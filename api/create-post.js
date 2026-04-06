@@ -458,10 +458,32 @@ export default async function handler(req, res) {
         focusKeyword: focusKeyword || '',
     }
 
-    // If a main image URL is provided, upload it to Sanity
-    if (mainImageUrl) {
+    // Get an image — use provided URL, or auto-fetch from Unsplash
+    let imageUrl = mainImageUrl
+    if (!imageUrl) {
+        const UNSPLASH_KEY = process.env.UNSPLASH_ACCESS_KEY
+        if (UNSPLASH_KEY) {
+            try {
+                const query = encodeURIComponent(focusKeyword || title)
+                const unsplashRes = await fetch(
+                    `https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=landscape`,
+                    { headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
+                )
+                if (unsplashRes.ok) {
+                    const data = await unsplashRes.json()
+                    if (data.results && data.results.length > 0) {
+                        imageUrl = data.results[0].urls.regular
+                    }
+                }
+            } catch (err) {
+                console.error('Unsplash fetch failed:', err.message)
+            }
+        }
+    }
+
+    if (imageUrl) {
         try {
-            const imageResponse = await fetch(mainImageUrl)
+            const imageResponse = await fetch(imageUrl)
             if (imageResponse.ok) {
                 const imageBuffer = Buffer.from(await imageResponse.arrayBuffer())
                 const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
@@ -477,7 +499,6 @@ export default async function handler(req, res) {
             }
         } catch (err) {
             console.error('Failed to upload main image:', err.message)
-            // Continue without image - don't fail the whole post
         }
     }
 
