@@ -69,5 +69,18 @@ export default {
             type: 'array',
             of: [{ type: 'string' }],
         },
+        {
+            name: 'metaDescription',
+            title: 'Meta Description',
+            type: 'text',
+            rows: 3,
+            description: 'SEO meta description (150-160 chars ideal). Falls back to excerpt if empty.',
+        },
+        {
+            name: 'focusKeyword',
+            title: 'Focus Keyword',
+            type: 'string',
+            description: 'Primary keyword this post targets for SEO.',
+        },
     ],
 }

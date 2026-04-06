@@ -3,6 +3,88 @@ import { useParams } from 'react-router-dom';
 import { client, urlFor } from '../sanity';
 import SEO from '../components/SEO';
 
+// Render a single span with its marks (bold, italic, links)
+const renderSpan = (span, markDefs = []) => {
+    let content = span.text;
+    if (!span.marks || span.marks.length === 0) return content;
+
+    for (const mark of span.marks) {
+        if (mark === 'strong') {
+            content = <strong key={span._key + '-strong'}>{content}</strong>;
+        } else if (mark === 'em') {
+            content = <em key={span._key + '-em'}>{content}</em>;
+        } else {
+            // Check markDefs for links
+            const def = markDefs.find(d => d._key === mark);
+            if (def && def._type === 'link') {
+                content = <a key={span._key + '-link'} href={def.href} target="_blank" rel="noopener noreferrer">{content}</a>;
+            }
+        }
+    }
+    return content;
+};
+
+// Render a portable text block with proper element type
+const renderBlock = (block, index) => {
+    if (block._type === 'image') {
+        return (
+            <figure key={block._key || index} className="post-inline-image">
+                <img src={urlFor(block).width(800).url()} alt={block.alt || ''} />
+                {block.alt && <figcaption>{block.alt}</figcaption>}
+            </figure>
+        );
+    }
+
+    if (block._type !== 'block') return null;
+
+    const children = block.children?.map(span => (
+        <React.Fragment key={span._key}>{renderSpan(span, block.markDefs)}</React.Fragment>
+    ));
+
+    const style = block.style || 'normal';
+
+    // List items are handled by grouping below
+    if (block.listItem) {
+        return <li key={block._key || index}>{children}</li>;
+    }
+
+    switch (style) {
+        case 'h1': return <h1 key={block._key || index}>{children}</h1>;
+        case 'h2': return <h2 key={block._key || index}>{children}</h2>;
+        case 'h3': return <h3 key={block._key || index}>{children}</h3>;
+        case 'h4': return <h4 key={block._key || index}>{children}</h4>;
+        case 'blockquote': return <blockquote key={block._key || index}>{children}</blockquote>;
+        default: return <p key={block._key || index}>{children}</p>;
+    }
+};
+
+// Group list items into <ul>/<ol> wrappers
+const renderBody = (body) => {
+    if (!body) return null;
+    const elements = [];
+    let i = 0;
+
+    while (i < body.length) {
+        const block = body[i];
+
+        if (block._type === 'block' && block.listItem) {
+            const listType = block.listItem;
+            const Tag = listType === 'number' ? 'ol' : 'ul';
+            const items = [];
+            while (i < body.length && body[i]._type === 'block' && body[i].listItem === listType) {
+                items.push(renderBlock(body[i], i));
+                i++;
+            }
+            elements.push(<Tag key={`list-${i}`}>{items}</Tag>);
+        } else {
+            elements.push(renderBlock(block, i));
+            i++;
+        }
+    }
+
+    return elements;
+};
+
 const BlogPost = () => {
     const { slug } = useParams();
     const [post, setPost] = useState(null);
@@ -18,7 +100,9 @@ const BlogPost = () => {
       author,
       mainImage,
       body,
-      categories
+      categories,
+      metaDescription,
+      focusKeyword
     }`, { slug })
             .then((data) => {
                 setPost(data);
@@ -78,7 +162,7 @@ const BlogPost = () => {
         <div className="page-content">
             <SEO
                 title={post.title}
-                description={post.excerpt || `Read ${post.title} on the New Energy Initiative Journal.`}
+                description={post.metaDescription || post.excerpt || `Read ${post.title} on the New Energy Initiative Journal.`}
                 canonical={`/blog/${post.slug?.current}`}
                 image={postImage}
                 type="article"
@@ -111,16 +195,7 @@ const BlogPost = () => {
                     )}
 
                     <div className="post-content">
-                        {post.body && post.body.map((block, index) => {
-                            if (block._type === 'block') {
-                                return (
-                                    <p key={block._key || index}>
-                                        {block.children.map(child => child.text).join('')}
-                                    </p>
-                                );
-                            }
-                            return null;
-                        })}
+                        {renderBody(post.body)}
                     </div>
                 </div>
             </article>
