@@ -194,6 +194,21 @@ function extractMarkDefs(text) {
     return defs
 }
 
+// Check if a line is a markdown table row
+function isTableRow(line) {
+    return /^\|(.+)\|$/.test(line.trim())
+}
+
+// Check if a line is the separator row (|---|---|)
+function isTableSeparator(line) {
+    return /^\|[\s\-:|]+\|$/.test(line.trim())
+}
+
+// Parse a table row into cells
+function parseTableRow(line) {
+    return line.trim().slice(1, -1).split('|').map(cell => cell.trim())
+}
+
 // Improved version that keeps markDefs and spans in sync
 function markdownToBlocks(markdown) {
     const lines = markdown.split('\n')
@@ -205,6 +220,30 @@ function markdownToBlocks(markdown) {
 
         if (line.trim() === '') {
             i++
+            continue
+        }
+
+        // Table: detect header row followed by separator row
+        if (isTableRow(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+            const headers = parseTableRow(line)
+            i += 2 // skip header and separator
+
+            const rows = []
+            while (i < lines.length && isTableRow(lines[i])) {
+                rows.push({
+                    _type: 'row',
+                    _key: generateKey(),
+                    cells: parseTableRow(lines[i]),
+                })
+                i++
+            }
+
+            blocks.push({
+                _type: 'table',
+                _key: generateKey(),
+                headers,
+                rows,
+            })
             continue
         }
 

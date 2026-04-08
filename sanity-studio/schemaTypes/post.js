@@ -61,6 +61,34 @@ export default {
                         },
                     ],
                 },
+                {
+                    type: 'object',
+                    name: 'table',
+                    title: 'Table',
+                    fields: [
+                        {
+                            name: 'headers',
+                            title: 'Headers',
+                            type: 'array',
+                            of: [{ type: 'string' }],
+                        },
+                        {
+                            name: 'rows',
+                            title: 'Rows',
+                            type: 'array',
+                            of: [{
+                                type: 'object',
+                                name: 'row',
+                                fields: [{
+                                    name: 'cells',
+                                    title: 'Cells',
+                                    type: 'array',
+                                    of: [{ type: 'string' }],
+                                }],
+                            }],
+                        },
+                    ],
+                },
             ],
         },
         {

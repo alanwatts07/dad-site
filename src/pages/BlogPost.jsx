@@ -35,6 +35,33 @@ const renderBlock = (block, index) => {
         );
     }
 
+    if (block._type === 'table') {
+        return (
+            <div key={block._key || index} className="post-table-wrapper">
+                <table className="post-table">
+                    {block.headers && (
+                        <thead>
+                            <tr>
+                                {block.headers.map((header, hi) => (
+                                    <th key={hi}>{header}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                    )}
+                    <tbody>
+                        {block.rows?.map((row) => (
+                            <tr key={row._key}>
+                                {row.cells.map((cell, ci) => (
+                                    <td key={ci}>{cell}</td>
+                                ))}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+        );
+    }
+
     if (block._type !== 'block') return null;
 
     const children = block.children?.map(span => (
