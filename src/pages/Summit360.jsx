@@ -5,17 +5,17 @@ const Summit360 = () => {
     return (
         <div className="page-content">
             <SEO
-                title="Summit 360 Approach"
-                description="The Summit 360 Approach™ is your complete home energy roadmap — reduce usage first, then reduce the cost of the energy you still need."
-                canonical="/summit-360"
+                title="The 360 Approach"
+                description="The 360 Approach™ is your complete home energy roadmap — reduce usage first, then reduce the cost of the energy you still need."
+                canonical="/360-approach"
             />
             <section className="section summit-hero">
                 <div className="container">
-                    <h1 className="section-title fade-in">The Summit 360 <span className="text-gradient">Approach™</span></h1>
+                    <h1 className="section-title fade-in">The 360 <span className="text-gradient">Approach™</span></h1>
                     <p className="lead fade-in delay-1 text-center">Your Complete Home Energy Roadmap</p>
 
                     <div className="summit-intro fade-in delay-1">
-                        <p>The Summit 360 Approach™ was designed to help homeowners see the full picture of their home’s energy use — and fix what matters most.</p>
+                        <p>The 360 Approach™ was designed to help homeowners see the full picture of their home’s energy use — and fix what matters most.</p>
                         <p className="highlight-text">First reduce how much energy you use, then reduce the cost of the energy you still need.</p>
                     </div>
 

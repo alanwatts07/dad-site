@@ -11,7 +11,7 @@
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://www.newenergyinitiative.com/summit-360</loc>
+    <loc>https://www.newenergyinitiative.com/360-approach</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -22,6 +22,16 @@
   </url>
   <url>
     <loc>https://www.newenergyinitiative.com/learning</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.newenergyinitiative.com/water</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.newenergyinitiative.com/revise</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>

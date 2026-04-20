@@ -1,4 +1,7 @@
 {
+  "redirects": [
+    { "source": "/summit-360", "destination": "/360-approach", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/((?!api/).*)", "destination": "/index.html" }

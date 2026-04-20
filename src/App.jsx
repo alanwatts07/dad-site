@@ -9,6 +9,8 @@ import Contact from './pages/Contact';
 import Book from './pages/Book';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Water from './pages/Water';
+import Revise from './pages/Revise';
 import './App.css';
 
 function App() {
@@ -47,8 +49,10 @@ function App() {
           <ul className={`nav-links ${menuOpen ? 'active' : ''}`}>
             <li><Link to="/">Home</Link></li>
             <li><Link to="/about">About Us</Link></li>
-            <li><Link to="/summit-360">Summit 360</Link></li>
+            <li><Link to="/360-approach">360 Approach</Link></li>
             <li><Link to="/products">Marketplace</Link></li>
+            <li><Link to="/water">Water</Link></li>
+            <li><Link to="/revise">Revise</Link></li>
             <li><Link to="/learning">Learning</Link></li>
             <li><Link to="/blog">Blog</Link></li>
             <li><Link to="/book" className="btn-nav btn-nav-book">Book</Link></li>
@@ -60,9 +64,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
-        <Route path="/summit-360" element={<Summit360 />} />
+        <Route path="/360-approach" element={<Summit360 />} />
         <Route path="/products" element={<Products />} />
         <Route path="/learning" element={<LearningCenter />} />
+        <Route path="/water" element={<Water />} />
+        <Route path="/revise" element={<Revise />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/book" element={<Book />} />
