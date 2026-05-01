@@ -497,36 +497,19 @@ export default async function handler(req, res) {
         focusKeyword: focusKeyword || '',
     }
 
-    // Get an image — use provided URL, or auto-fetch from Unsplash
-    let imageUrl = mainImageUrl
-    if (!imageUrl) {
-        const UNSPLASH_KEY = process.env.UNSPLASH_ACCESS_KEY
-        if (UNSPLASH_KEY) {
-            try {
-                const query = encodeURIComponent(focusKeyword || title)
-                const unsplashRes = await fetch(
-                    `https://api.unsplash.com/search/photos?query=${query}&per_page=1&orientation=landscape`,
-                    { headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
-                )
-                if (unsplashRes.ok) {
-                    const data = await unsplashRes.json()
-                    if (data.results && data.results.length > 0) {
-                        imageUrl = data.results[0].urls.regular
-                    }
-                }
-            } catch (err) {
-                console.error('Unsplash fetch failed:', err.message)
-            }
-        }
-    }
-
-    if (imageUrl) {
+    // Attach a main image. If `mainImageUrl` was provided, use it directly.
+    // Otherwise fetch a pool of Unsplash candidates and try them in order,
+    // skipping any whose Unsplash photo ID is already in use, and rejecting
+    // any whose uploaded Sanity asset ID collides with an existing post's
+    // image (Sanity dedups assets by content SHA — two different Unsplash
+    // photos can map to the same asset if the bytes match).
+    if (mainImageUrl) {
         try {
-            const imageResponse = await fetch(imageUrl)
+            const imageResponse = await fetch(mainImageUrl)
             if (imageResponse.ok) {
                 const imageBuffer = Buffer.from(await imageResponse.arrayBuffer())
                 const contentType = imageResponse.headers.get('content-type') || 'image/jpeg'
-                const ext = contentType.split('/')[1] || 'jpg'
+                const ext = (contentType.split('/')[1] || 'jpg').split(';')[0]
                 const asset = await sanityClient.assets.upload('image', imageBuffer, {
                     filename: `${postSlug}.${ext}`,
                     contentType,
@@ -538,6 +521,81 @@ export default async function handler(req, res) {
             }
         } catch (err) {
             console.error('Failed to upload main image:', err.message)
+        }
+    } else {
+        const UNSPLASH_KEY = process.env.UNSPLASH_ACCESS_KEY
+        if (UNSPLASH_KEY) {
+            try {
+                const query = encodeURIComponent(focusKeyword || title)
+                const unsplashRes = await fetch(
+                    `https://api.unsplash.com/search/photos?query=${query}&per_page=30&orientation=landscape`,
+                    { headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` } }
+                )
+                const results = unsplashRes.ok
+                    ? ((await unsplashRes.json())?.results || [])
+                    : []
+
+                if (results.length > 0) {
+                    const [usedFilenames, usedAssetRefs] = await Promise.all([
+                        sanityClient.fetch(
+                            `*[_type == "sanity.imageAsset" && defined(originalFilename)].originalFilename`
+                        ),
+                        sanityClient.fetch(
+                            `*[_type == "post" && defined(mainImage.asset._ref)].mainImage.asset._ref`
+                        ),
+                    ])
+                    const usedUnsplashIds = new Set(
+                        (usedFilenames || [])
+                            .map(fn => {
+                                const m = typeof fn === 'string' ? fn.match(/-ux-([A-Za-z0-9_-]+)\./) : null
+                                return m ? m[1] : null
+                            })
+                            .filter(Boolean)
+                    )
+                    const usedAssetIds = new Set(usedAssetRefs || [])
+
+                    for (const cand of results) {
+                        if (!cand?.id || !cand?.urls?.regular) continue
+                        if (usedUnsplashIds.has(cand.id)) continue
+
+                        let imgRes
+                        try {
+                            imgRes = await fetch(cand.urls.regular)
+                        } catch {
+                            continue
+                        }
+                        if (!imgRes.ok) continue
+
+                        const imageBuffer = Buffer.from(await imgRes.arrayBuffer())
+                        const contentType = imgRes.headers.get('content-type') || 'image/jpeg'
+                        const ext = (contentType.split('/')[1] || 'jpg').split(';')[0]
+
+                        let asset
+                        try {
+                            asset = await sanityClient.assets.upload('image', imageBuffer, {
+                                filename: `${postSlug}-ux-${cand.id}.${ext}`,
+                                contentType,
+                            })
+                        } catch (err) {
+                            console.error('Asset upload failed:', err.message)
+                            continue
+                        }
+
+                        if (usedAssetIds.has(asset._id)) {
+                            // Sanity deduped to an already-used asset; try next candidate
+                            continue
+                        }
+
+                        doc.mainImage = {
+                            _type: 'image',
+                            asset: { _type: 'reference', _ref: asset._id },
+                        }
+                        break
+                    }
+                }
+            } catch (err) {
+                console.error('Unsplash fetch failed:', err.message)
+            }
         }
     }
 
